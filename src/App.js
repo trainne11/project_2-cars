@@ -1,25 +1,47 @@
-import logo from './logo.svg';
-import './App.css';
+import ItemList from "./components/ItemList";
+import {useState} from 'react';
+import SearchBar from "./components/SearchBar";
+import axios from 'axios';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+function App(){
+
+    let [images,setImages] = useState([]); 
+
+    let handleSubmit = async (term) => {
+       // let get fetch the results
+       try{
+
+        let res = await axios({
+            url : "https://api.unsplash.com/search/photos",
+            headers : {
+              'Authorization' : 'Client-ID hEq8fEeGsFYc0vy-2_rk5hlL6-5BrPQT3ho7gBKbkOA'
+            },
+            params : {
+              query : term
+           }
+           
+        })
+
+        console.log(res.data);
+        
+        setImages(res.data);
+
+       }catch(err){
+
+        console.log(err);
+
+       }
+    
+
+
+    }
+
+    return <div>
+        <SearchBar onSubmit = {handleSubmit} />
+        <ItemList imageList = {images}/>
+        
+        </div>
 }
+
 
 export default App;
